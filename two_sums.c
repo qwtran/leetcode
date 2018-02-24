@@ -1,3 +1,7 @@
+#include <stdlib.h>
+#include <stdio.h>
+
+
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
@@ -5,11 +9,13 @@
 const int mapSize = 100;
 
 struct Index {
+    // for any value, there can be duplicates. track all indexes with this list.
     int index;
     struct Index* nextIndex;
-}
+};
 
 struct Node {
+    // node contains a value and a list of index associated with the value
     int value;
     struct Index* indexList;
     struct Node* nextNode;
@@ -22,24 +28,30 @@ void initMap() {
 }
 
 void put(int index, int value) {
+    // create new index struct for this value
     struct Index* indexStruct = (struct Index*) malloc(sizeof(struct Index));
     indexStruct->index = index;
     indexStruct->nextIndex = 0;
 
+    // create new node for this value
     struct Node* entryNode = (struct Node*) malloc(sizeof(struct Node));
-    entryNode->value = i;
+    entryNode->value = value;
     entryNode->nextNode = 0;
 
-    struct Node* indexNode = nodeMap[i % mapSize];
+    // get node ptr for this value
+    struct Node* indexNode = nodeMap[abs(value) % mapSize];
 
+    // node ptr points to null, value has not been added, so create node
     if(indexNode == 0) {
-        nodeMap[i % mapSize] = entryNode;
+        nodeMap[abs(value) % mapSize] = entryNode;
         entryNode->indexList = indexStruct;
         return;
     }
 
+    // node exists, find node with correct value, else create add new node
     while(indexNode != 0) {
         if(indexNode->value == value) {
+            // node for value found, append this index to end of index list
             struct Index* temp = indexNode->indexList;
             while(temp != 0) {
                 if(temp->nextIndex == 0) {
@@ -48,29 +60,28 @@ void put(int index, int value) {
                 }
                 temp = temp->nextIndex;
             }
-            return;
         }
+
         if(indexNode->nextNode == 0) {
+            // reached the end, node with this value does not exist, so append this node to end
             indexNode->nextNode = entryNode;
             entryNode->indexList = indexStruct;
             return;
-        } else {
-            indexNode = indexNode->nextNode;
         }
+        
+        indexNode = indexNode->nextNode;
     }
-    assert(false);
 }
 
-int contains(int i) {
-    int count = 0;
-    struct Node* indexNode = nodeMap[i % mapSize];
+struct Index* contains(int i) {
+    struct Node* indexNode = nodeMap[abs(i) % mapSize];
     while(indexNode != 0) {
         if(indexNode->value == i) {
-            ++count;
+            return indexNode->indexList;
         }
         indexNode = indexNode->nextNode;
     }
-    return count;
+    return 0;
 }
 
 void cleanUp() {
@@ -91,15 +102,36 @@ void cleanUp() {
 }
 
 int* twoSum(int* nums, int numsSize, int target) {
+    // init map
     initMap();
     
-    # fill map
+    // fill map
     for(int i = 0; i < numsSize; ++i) {
-        put(nums[i]);
-        if(contains(target - nums[i])) {
-            //cleanUp();
-            return malloc(2*sizeof(int));
+        put(i, nums[i]);
+
+	struct Index* indexResults = contains(target - nums[i]);
+        if(indexResults) {
+            if(indexResults->index != i) {
+                int* result = (int*) malloc(2*sizeof(int));
+		result[0] = i;
+		result[1] = indexResults->index;
+		//cleanUp();
+		return result;
+            }
+            indexResults = indexResults->nextIndex;
         }
     }
-    assert(false);
+    return 0;
 }
+
+
+int main() {
+    int nums[] = {1, 3, 5, -10, 1};
+    int* results = twoSum(nums, sizeof(nums)/sizeof(int), 2);
+    if(results)
+        printf("%i %i\n", results[0], results[1]);
+    else
+        printf("None\n");
+    return 0;
+}
+
