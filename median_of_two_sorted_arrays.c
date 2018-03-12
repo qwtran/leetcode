@@ -20,23 +20,72 @@
  * The median is (2 + 3)/2 = 2.5
  */
 
-int isTargetAMedian(int targetVal, int itemsGreaterThanTarget, int* nums2, int nums2Size) {
-	return 0;
+void
+calculateLowerUpperIndex(
+		int  nums1TargetIndex, // input
+		int  nums1Size,        // input
+		int  nums2Size,        // input
+		int* lower,            // output
+		int* upper)            // output 
+{
+	int totalSize = nums1Size + nums2Size;
+	int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 1;
+	int itemsGreaterTotal = totalSize / 2;
+
+//	if(itemsGreaterInNums1Array == 0) { // last element
+//		lower = 0;
+//		*upper = 0;
+//	} else if(nums1TargetIndex == 0) { // first element
+//		*lower = nums2Size - 1;
+//		upper = 0;
+//	} else {
+		*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array) - 1;
+		if(*lower < 0) {
+			*lower = -1;
+		}
+		*upper = *lower + 1;
+		if(*upper >= nums2Size) {
+			*upper = -1;
+		}
+//	}
 }
 
-double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
+int
+isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, int nums2Size) {
+	int lower = 0;
+	int upper = 0;
+	calculateLowerUpperIndex(nums1TargetIndex, nums1Size, nums2Size, &lower, &upper);
+
+	if(lower != -1) {
+		if(nums1[nums1TargetIndex] < nums2[lower]) {
+			return 0;
+		}
+	}
+
+	if(upper != -1) {
+		if(nums1[nums1TargetIndex] > nums2[upper]) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+double
+findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 	for(int i = 0; i < nums1Size; ++i) {
-		printf("%i ", isTargetAMedian(nums1[i], nums1Size - i, nums2, nums2Size));
+		printf("index:%i  %i\n", i, isTargetAMedian(i, nums1, nums1Size, nums2, nums2Size));
 	}
 	for(int i = 0; i < nums2Size; ++i) {
-		printf("%i ", isTargetAMedian(nums2[i], nums2Size - i, nums1, nums1Size));
+		printf("index:%i %i\n", i, isTargetAMedian(i, nums2, nums2Size, nums1, nums1Size));
 	}
 	return 0;
 }
 
-int main () {
+int
+main () {
 	int num1[] = {1, 2, 3, 4, 7};
 	int num2[] = {0, 5, 6, 9};
 
-	printf("median: %f", findMedianSortedArrays(num1, sizeof(num1), num2, sizeof(num2)));
+	printf("median: %f\n", findMedianSortedArrays(num1, sizeof(num1)/sizeof(int), num2, sizeof(num2)/sizeof(int)));
 }
