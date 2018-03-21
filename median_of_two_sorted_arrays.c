@@ -22,6 +22,7 @@
  */
 
 
+
 /* Given a target index in nums1, this function returns an upper and lower index
  * for nums2. This allows for comparison of the nums1 target to nums2 values located
  * in upper and lower. If target value is smaller or equal than value in lower index AND 
@@ -79,7 +80,14 @@ validIndexRangeForNums1Size(
 	}
 }
 
-int
+enum TargetVal {
+	MEDIAN_FOUND = 0,
+	TOO_HIGH = 1,
+	TOO_LOW  = -1,
+	UNKNOWN = 999
+};
+
+enum TargetVal
 isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, int nums2Size) {
 	int lower = 0;
 	int upper = 0;
@@ -91,21 +99,21 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 
 	if(lower != -1) {
 		if(nums1[nums1TargetIndex] < nums2[lower]) {
-			return -1;
+			return TOO_LOW;
 		}
 	}
 
 	if(upper != -1) {
 		if(nums1[nums1TargetIndex] > nums2[upper]) {
-			return 1;
+			return TOO_HIGH;
 		}
 	}
 
 	if(lower == -1 && upper == -1) {
-		return 999;
+		return UNKNOWN;
 	}
 
-	return 0;
+	return MEDIAN_FOUND;
 }
 
 double
