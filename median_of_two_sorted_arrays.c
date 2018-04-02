@@ -138,25 +138,25 @@ testValidRangeFunction() {
 	int end = -1;
 	validIndexRangeForNums1Size(10, 2, &start, &end); 
 	assert(start == 3);
-	assert(end == 7);
+	assert(end == 6);
 
 	start = -1;
 	end = -1;
 	validIndexRangeForNums1Size(3, 3, &start, &end);
 	assert(start == 0);
-	assert(end == 3);
+	assert(end == 2);
 
 	start = -1;
 	end = -1;
 	validIndexRangeForNums1Size(3, 4, &start, &end);
 	assert(start == 0);
-	assert(end == 3);
+	assert(end == 2);
 
 	start = -1;
 	end = -1;
 	validIndexRangeForNums1Size(1, 4, &start, &end);
 	assert(start == 0);
-	assert(end == 1);
+	assert(end == 0);
 }
 
 int
