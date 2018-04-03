@@ -56,14 +56,11 @@ getNums2ComparisonIndex(
 	// even only
 	if(totalSize % 2 == 0) {
 		*evenLowerNums2Index = *upperNums2Index;
-		// TODO: clunky logic
-		if(*evenLowerNums2Index != -1) {
-			if(*evenLowerNums2Index + 1 < nums2Size) {
-				*evenUpperNums2Index = *evenLowerNums2Index + 1;
-			} else {
-				*evenUpperNums2Index = -1;
-			}
-		} else {
+		*evenUpperNums2Index = *evenLowerNums2Index + 1;
+		if(*evenLowerNums2Index < 0 || *evenLowerNums2Index >= nums2Size) {
+			*evenLowerNums2Index = -1;
+		}
+		if(*evenUpperNums2Index < 0 || *evenUpperNums2Index >= nums2Size) {
 			*evenUpperNums2Index = -1;
 		}
 	}
@@ -106,10 +103,12 @@ enum TargetVal {
 	TOO_LOW                  = 2,
 	MEDIAN_FOUND             = 3,
 
-	EVEN_LEFTFOUND_RIGHTHIGH = 4,
-	EVEN_LEFTFOUND_RIGHTLOW  = 5,
-	EVEN_LEFTHIGH_RIGHTFOUND = 6,
-	EVEN_LEFTLOW_RIGHTFOUND  = 7,
+	EVEN_LEFTFOUND_RIGHTHIGH     = 4,
+	EVEN_LEFTFOUND_RIGHTLOW      = 5,
+	EVEN_LEFTFOUND_RIGHTUNKNOWN  = 6,
+	EVEN_LEFTHIGH_RIGHTFOUND     = 7,
+	EVEN_LEFTLOW_RIGHTFOUND      = 8,
+	EVEN_LEFTUNKNOWN_RIGHTFOUND  = 9,
 };
 
 enum TargetVal
@@ -142,7 +141,7 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 	int upper = 0;
 	int evenLower = 0;
 	int evenUpper = 0;
-	
+
 	int totalSize = nums1Size + nums2Size;
 
 	getNums2ComparisonIndex(nums1TargetIndex,
@@ -169,7 +168,7 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 			evenUpper,
 			nums1,
 			nums2);
-printf("target %i\tevenLower %i\tevenUpper %i\tleft %i\tright %i\n", nums1TargetIndex, evenLower, evenUpper, evenLeft, evenRight);
+printf("target %i\t\tevenLower %i\t\tevenUpper %i\t\tleft %i\t\tright %i\n", nums1TargetIndex, evenLower, evenUpper, evenLeft, evenRight);
 	if((evenLeft == TOO_HIGH) && (evenRight == TOO_HIGH)) {
 		return TOO_HIGH;
 	} else if((evenLeft == TOO_LOW) && (evenRight == TOO_LOW)) {
@@ -178,10 +177,22 @@ printf("target %i\tevenLower %i\tevenUpper %i\tleft %i\tright %i\n", nums1Target
 		return EVEN_LEFTFOUND_RIGHTHIGH;
 	} else if((evenLeft == MEDIAN_FOUND) && (evenRight == TOO_LOW)) {
 		return EVEN_LEFTFOUND_RIGHTLOW;
+	} else if((evenLeft == MEDIAN_FOUND) && (evenRight == UNKNOWN)) {
+		return EVEN_LEFTFOUND_RIGHTUNKNOWN;
 	} else if((evenLeft == TOO_HIGH) && (evenRight == MEDIAN_FOUND)) {
 		return EVEN_LEFTHIGH_RIGHTFOUND;
 	} else if((evenLeft == TOO_LOW) && (evenRight == MEDIAN_FOUND)) {
 		return EVEN_LEFTLOW_RIGHTFOUND;
+	} else if((evenLeft == UNKNOWN) && (evenRight == MEDIAN_FOUND)) {
+		return EVEN_LEFTUNKNOWN_RIGHTFOUND;
+	} else if((evenLeft == UNKNOWN) && (evenRight == TOO_LOW)) {
+		return TOO_LOW;
+	} else if((evenLeft == UNKNOWN) && (evenRight == TOO_HIGH)) {
+		return TOO_HIGH;
+	} else if((evenLeft == TOO_LOW) && (evenRight == UNKNOWN)) {
+		return TOO_LOW;
+	} else if((evenLeft == TOO_HIGH) && (evenRight == UNKNOWN)) {
+		return TOO_HIGH;
 	} else {
 		return UNKNOWN;
 	}
@@ -201,6 +212,7 @@ quickSearchMedian(int nums1Start,
 	int leftFound = 0;
 
 	while(nums1Start <= nums1End) {
+printf("start %i \t\t end %i\n", nums1Start, nums1End);
 		int mid = (nums1Start + nums1End)/2;
 
 		enum TargetVal result =
@@ -233,6 +245,16 @@ quickSearchMedian(int nums1Start,
 			**evenReturnVal = nums1[mid];
 			if(rightFound && leftFound) return;
 			nums1Start = mid + 1;
+		} else if(result == EVEN_LEFTFOUND_RIGHTUNKNOWN) {
+			leftFound = 1;
+			**returnVal = nums1[mid];
+			if(rightFound && leftFound) return;
+			nums1Start = mid + 1;
+		} else if(result == EVEN_LEFTUNKNOWN_RIGHTFOUND) { 
+			rightFound = 1;
+			**evenReturnVal = nums1[mid];
+			if(rightFound && leftFound) return;
+			nums1End = mid - 1;
 		} else if(result == UNKNOWN) {
 			// Need to handle this case
 			assert(0);
