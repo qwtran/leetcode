@@ -153,10 +153,34 @@ void
 testValidRangeFunction() {
 	int start = -1;
 	int end = -1;
-	validIndexRangeForNums1Size(10, 2, EVEN_LEFT, &start, &end); 
 
+	validIndexRangeForNums1Size(10, 2, EVEN_LEFT, &start, &end);
 	assert(start == 3);
 	assert(end == 5);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(8, 4, EVEN_LEFT, &start, &end);
+	assert(start == 1);
+	assert(end == 5);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(0, 4, EVEN_LEFT, &start, &end);
+	assert(start == -1);
+	assert(end == -1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(4, 0, EVEN_LEFT, &start, &end);
+	assert(start == 1);
+	assert(end == 1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(2, 0, EVEN_LEFT, &start, &end);
+	assert(start == 0);
+	assert(end == 0);
 
 	start = -1;
 	end = -1;
