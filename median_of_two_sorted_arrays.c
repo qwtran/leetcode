@@ -64,28 +64,35 @@ getUpperLowerNum2IndexGivenTarget(
  */
 void
 validIndexRangeForNums1Size(
-		int  nums1Size,   // input
-		int  nums2Size,   // input
-		int* start,       // output, including start
-		int* end)         // output, including end
+		int  nums1Size,          // input
+		int  nums2Size,          // input
+		enum MedianPosition pos, // input
+		int* start,              // output, including start
+		int* end)                // output, including end
 {
 	int total = nums1Size + nums2Size;
 	int middle = total / 2;
 
-	*start = nums1Size - middle - 1;
-	if(*start < 0) {
-		*start = 0;
-	}
-	if(*start >= nums1Size) {
-		*start = -1;
+	if(pos == ODD) {
+		*start = nums1Size - middle - 1;
+		*end = middle;
+	} else if(pos == EVEN_LEFT) {
+		*start = middle - nums2Size  - 1;
+		*end = total - middle - 1;
 	}
 
-	*end = middle;
 	if(*end >= nums1Size) {
 		*end = nums1Size - 1;
 	}
 	if(*end < 0) {
 		*end = -1;
+	}
+
+	if(*start < 0) {
+		*start = 0;
+	}
+	if(*start >= nums1Size) {
+		*start = -1;
 	}
 }
 
@@ -146,27 +153,28 @@ void
 testValidRangeFunction() {
 	int start = -1;
 	int end = -1;
-	validIndexRangeForNums1Size(10, 2, &start, &end); 
+	validIndexRangeForNums1Size(10, 2, EVEN_LEFT, &start, &end); 
+
 	assert(start == 3);
-	assert(end == 6);
+	assert(end == 5);
 
 	start = -1;
 	end = -1;
-	validIndexRangeForNums1Size(3, 3, &start, &end);
+	validIndexRangeForNums1Size(3, 3, EVEN_LEFT, &start, &end);
 	assert(start == 0);
 	assert(end == 2);
 
 	start = -1;
 	end = -1;
-	validIndexRangeForNums1Size(3, 4, &start, &end);
+	validIndexRangeForNums1Size(10, 40, EVEN_LEFT, &start, &end);
 	assert(start == 0);
-	assert(end == 2);
+	assert(end == 9);
 
 	start = -1;
 	end = -1;
-	validIndexRangeForNums1Size(1, 4, &start, &end);
+	validIndexRangeForNums1Size(3, 4, ODD, &start, &end);
 	assert(start == 0);
-	assert(end == 0);
+	assert(end == 2);
 }
 
 int
