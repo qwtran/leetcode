@@ -22,6 +22,12 @@
  */
 
 
+enum MedianPosition {
+	ODD        = 0,
+	EVEN_LEFT  = 1,
+	EVEN_RIGHT = 2,
+};
+
 
 /* Given a target index in nums1, this function returns an upper and lower index
  * for nums2. This allows for comparison of the nums1 target to nums2 values located
