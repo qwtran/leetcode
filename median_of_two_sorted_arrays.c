@@ -53,12 +53,15 @@ getUpperLowerNum2IndexGivenTarget(
 	return;
 }
 
+/* Returns a start and end index values for nums1. The index range represents
+ * valid locations where the median could reside.
+ */
 void
 validIndexRangeForNums1Size(
 		int  nums1Size,   // input
 		int  nums2Size,   // input
 		int* start,       // output, including start
-		int* end)         // output, excluding end
+		int* end)         // output, including end
 {
 	int total = nums1Size + nums2Size;
 	int middle = total / 2;
@@ -71,9 +74,9 @@ validIndexRangeForNums1Size(
 		*start = -1;
 	}
 
-	*end = middle + 1;
-	if(*end > nums1Size) {
-		*end = nums1Size;
+	*end = middle;
+	if(*end >= nums1Size) {
+		*end = nums1Size - 1;
 	}
 	if(*end < 0) {
 		*end = -1;
@@ -119,9 +122,10 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 double
 findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 
-	// 1. Pick smaller array
-	// 2. In the smaller array, quick search
-	// 3. If not in smaller array, find valid index and quick search, depending on how large 2nd array is
+	// 1. Get valid index range for nums1
+	// 2. Search nums1 for median using quick search
+	// 3. If not in nums1, get valid index range for nums2
+	// 4. Search nums2 for median by using quick search
 
 	for(int i = 0; i < nums1Size; ++i) {
 		printf("index:%i %i\n", i, isTargetAMedian(i, nums1, nums1Size, nums2, nums2Size));
