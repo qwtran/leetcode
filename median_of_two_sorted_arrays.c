@@ -199,6 +199,30 @@ testValidRangeFunction() {
 	validIndexRangeForNums1Size(3, 4, ODD, &start, &end);
 	assert(start == 0);
 	assert(end == 2);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(9, 4, ODD, &start, &end);
+	assert(start == 2);
+	assert(end == 6);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(7, 0, ODD, &start, &end);
+	assert(start == 3);
+	assert(end == 3);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(0, 5, ODD, &start, &end);
+	assert(start == -1);
+	assert(end == -1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(0, 0, ODD, &start, &end);
+	assert(start == -1);
+	assert(end == -1);
 }
 
 int
