@@ -451,6 +451,10 @@ main () {
 	int num3[] = {1, 2, 4, 5};
 	int num4[] = {3};
 	assert(findMedianSortedArrays(num3, SIZE_OF(num3), num4, SIZE_OF(num4)) == 3.0);
+	assert(findMedianSortedArrays(num4, SIZE_OF(num4), num3, SIZE_OF(num3)) == 3.0);
+
+	assert(findMedianSortedArrays(num1, SIZE_OF(num1), num3, SIZE_OF(num3)) == 4.0);
+	assert(findMedianSortedArrays(num3, SIZE_OF(num3), num1, SIZE_OF(num1)) == 4.0);
 
 	printf("array test pass\n");
 }
