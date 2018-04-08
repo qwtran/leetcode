@@ -154,6 +154,7 @@ testValidRangeFunction() {
 	int start = -1;
 	int end = -1;
 
+
 	validIndexRangeForNums1Size(10, 2, EVEN_LEFT, &start, &end);
 	assert(start == 3);
 	assert(end == 5);
@@ -193,6 +194,52 @@ testValidRangeFunction() {
 	validIndexRangeForNums1Size(10, 40, EVEN_LEFT, &start, &end);
 	assert(start == 0);
 	assert(end == 9);
+
+
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(10, 2, EVEN_RIGHT, &start, &end);
+	assert(start == 4);
+	assert(end == 6);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(8, 4, EVEN_RIGHT, &start, &end);
+	assert(start == 2);
+	assert(end == 6);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(0, 4, EVEN_RIGHT, &start, &end);
+	assert(start == -1);
+	assert(end == -1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(4, 0, EVEN_RIGHT, &start, &end);
+	assert(start == 2);
+	assert(end == 2);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(2, 0, EVEN_RIGHT, &start, &end);
+	assert(start == 1);
+	assert(end == 1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(3, 3, EVEN_RIGHT, &start, &end);
+	assert(start == 0);
+	assert(end == 2);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(10, 40, EVEN_RIGHT, &start, &end);
+	assert(start == 0);
+	assert(end == 9);
+
+
 
 	start = -1;
 	end = -1;
