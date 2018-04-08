@@ -79,6 +79,9 @@ validIndexRangeForNums1Size(
 	} else if(pos == EVEN_LEFT) {
 		*start = middle - nums2Size  - 1;
 		*end = total - middle - 1;
+	} else if(pos == EVEN_RIGHT) {
+		*start = middle - nums2Size;
+		*end = total - middle;
 	}
 
 	if(*end >= nums1Size) {
