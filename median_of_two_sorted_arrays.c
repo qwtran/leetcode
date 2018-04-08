@@ -152,6 +152,40 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 	return MEDIAN_FOUND;
 }
 
+int
+binarySearchMedian(enum MedianPosition pos,
+		int* nums1,
+		int  nums1Size,
+		int* nums2,
+		int  nums2Size)
+{
+	int start = -1;
+	int end   = -1;
+
+	validIndexRangeForNums1Size(nums1Size, nums2Size, pos, &start, &end);
+
+	if((start == -1) || (end == -1)) {
+		return -1;
+	}
+
+	int mid = -1;
+	while(start <= end) {
+		mid = (start + end)/2;
+		enum TargetVal result = isTargetAMedian(mid, nums1, nums1Size, nums2, nums2Size);
+		if(result == TOO_HIGH) {
+			end = mid - 1;
+		} else if(result == TOO_LOW) {
+			start = mid + 1;
+		} else if(result == MEDIAN_FOUND) {
+			return mid;
+		} else if(result == UNKNOWN) {
+			assert(0);
+		}
+	}
+
+	return -1;
+}
+
 double
 findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 
@@ -160,12 +194,26 @@ findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 	// 3. If not in nums1, get valid index range for nums2
 	// 4. Search nums2 for median by using quick search
 
-	for(int i = 0; i < nums1Size; ++i) {
-		printf("index:%i %i\n", i, isTargetAMedian(i, nums1, nums1Size, nums2, nums2Size));
+	int isOdd = (nums1Size + nums2Size) % 2;
+
+	if(isOdd) {
+		int medianIndex = binarySearchMedian(ODD, nums1, nums1Size, nums2, nums2Size);
+
+		if(medianIndex != -1) {
+			return nums1[medianIndex];
+		}
+
+		medianIndex = binarySearchMedian(ODD, nums2, nums2Size, nums1, nums1Size);
+
+		if(medianIndex != -1) {
+			return nums2[medianIndex];
+		} else {
+			assert(0);
+		}
+	} else {
+
 	}
-	for(int i = 0; i < nums2Size; ++i) {
-		printf("index:%i %i\n", i, isTargetAMedian(i, nums2, nums2Size, nums1, nums1Size));
-	}
+
 	return 0;
 }
 
@@ -290,6 +338,14 @@ testValidRangeFunction() {
 	validIndexRangeForNums1Size(0, 0, ODD, &start, &end);
 	assert(start == -1);
 	assert(end == -1);
+
+	start = -1;
+	end = -1;
+	validIndexRangeForNums1Size(1, 4, ODD, &start, &end);
+	assert(start == 0);
+	assert(end == 0);
+
+	printf("validIndexRangeForNums1Size passed\n");
 }
 
 void
@@ -376,7 +432,11 @@ testUpperLowerIndexVals() {
 	getUpperLowerNum2IndexGivenTarget(3, EVEN_RIGHT, 4, 2, &lower, &upper);
 	assert(lower == -1);
 	assert(upper == 0);
+
+	printf("getUpperLowerNum2IndexGivenTarget passed\n");
 }
+
+#define SIZE_OF(array) (sizeof(array)/sizeof(array[0]))
 
 int
 main () {
@@ -385,7 +445,12 @@ main () {
 
 	int num1[] = {1, 2, 3, 4, 7, 11, 12};
 	int num2[] = {0, 5, 6, 9};
-	//int num2[] = {0};
+	assert(findMedianSortedArrays(num1, SIZE_OF(num1), num2, SIZE_OF(num2)) == 5.0);
+	assert(findMedianSortedArrays(num2, SIZE_OF(num2), num1, SIZE_OF(num1)) == 5.0);
 
-	printf("median: %f\n", findMedianSortedArrays(num1, sizeof(num1)/sizeof(int), num2, sizeof(num2)/sizeof(int)));
+	int num3[] = {1, 2, 4, 5};
+	int num4[] = {3};
+	assert(findMedianSortedArrays(num3, SIZE_OF(num3), num4, SIZE_OF(num4)) == 3.0);
+
+	printf("array test pass\n");
 }
