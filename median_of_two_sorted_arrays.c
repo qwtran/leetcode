@@ -38,18 +38,26 @@ enum MedianPosition {
  */
 void
 getUpperLowerNum2IndexGivenTarget(
-		int  nums1TargetIndex, // input
-		int  nums1Size,        // input
-		int  nums2Size,        // input
-		int* lower,            // output
-		int* upper)            // output 
+		int  nums1TargetIndex,   // input
+		enum MedianPosition pos, // input
+		int  nums1Size,          // input
+		int  nums2Size,          // input
+		int* lower,              // output
+		int* upper)              // output 
 {
 	int totalSize = nums1Size + nums2Size;
 	int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 1;
 	int itemsGreaterTotal = totalSize / 2;
 
-	*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array) - 1;
-	*upper = *lower + 1;
+	if(pos == ODD) {
+		*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array) - 1;
+		*upper = *lower + 1;
+	} else if(pos == EVEN_LEFT) {
+
+	} else if(pos == EVEN_RIGHT) {
+
+	}
+
 	if(*lower < 0 || *lower >= nums2Size) {
 		*lower = -1;
 	}
@@ -111,6 +119,7 @@ isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, in
 	int lower = 0;
 	int upper = 0;
 	getUpperLowerNum2IndexGivenTarget(nums1TargetIndex,
+			ODD,
 			nums1Size,
 			nums2Size,
 			&lower,
@@ -275,9 +284,44 @@ testValidRangeFunction() {
 	assert(end == -1);
 }
 
+void
+testUpperLowerIndexVals() {
+	int upper = 999;
+	int lower = 999;
+
+	getUpperLowerNum2IndexGivenTarget(0, ODD, 5, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == -1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(1, ODD, 5, 2, &lower, &upper);
+	assert(lower == 1);
+	assert(upper == -1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(2, ODD, 5, 2, &lower, &upper);
+	assert(lower == 0);
+	assert(upper == 1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(3, ODD, 5, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == 0);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(4, ODD, 5, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == -1);
+}
+
 int
 main () {
 	testValidRangeFunction();
+	testUpperLowerIndexVals();
 
 	int num1[] = {1, 2, 3, 4, 7, 11, 12};
 	int num2[] = {0, 5, 6, 9};
