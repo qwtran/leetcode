@@ -45,17 +45,25 @@ getUpperLowerNum2IndexGivenTarget(
 		int* lower,              // output
 		int* upper)              // output 
 {
-	int totalSize = nums1Size + nums2Size;
-	int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 1;
-	int itemsGreaterTotal = totalSize / 2;
 
 	if(pos == ODD) {
+		int totalSize = nums1Size + nums2Size - 1;
+		int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 1;
+		int itemsGreaterTotal = totalSize / 2;
 		*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array) - 1;
 		*upper = *lower + 1;
 	} else if(pos == EVEN_LEFT) {
-
+		int totalSize = nums1Size + nums2Size - 2;
+		int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 2;
+		int itemsGreaterTotal = totalSize / 2;
+		*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array) - 1;
+		*upper = *lower + 1;
 	} else if(pos == EVEN_RIGHT) {
-
+		int totalSize = nums1Size + nums2Size - 2;
+		int itemsGreaterInNums1Array = nums1Size - nums1TargetIndex - 2;
+		int itemsGreaterTotal = totalSize / 2;
+		*lower = nums2Size - (itemsGreaterTotal - itemsGreaterInNums1Array);
+		*upper = *lower + 1;
 	}
 
 	if(*lower < 0 || *lower >= nums2Size) {
@@ -316,6 +324,58 @@ testUpperLowerIndexVals() {
 	getUpperLowerNum2IndexGivenTarget(4, ODD, 5, 2, &lower, &upper);
 	assert(lower == -1);
 	assert(upper == -1);
+
+
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(0, EVEN_LEFT, 4, 2, &lower, &upper);
+	assert(lower == 1);
+	assert(upper == -1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(1, EVEN_LEFT, 4, 2, &lower, &upper);
+	assert(lower == 0);
+	assert(upper == 1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(2, EVEN_LEFT, 4, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == 0);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(3, EVEN_LEFT, 4, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == -1);
+
+
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(0, EVEN_RIGHT, 4, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == -1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(1, EVEN_RIGHT, 4, 2, &lower, &upper);
+	assert(lower == 1);
+	assert(upper == -1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(2, EVEN_RIGHT, 4, 2, &lower, &upper);
+	assert(lower == 0);
+	assert(upper == 1);
+
+	upper = 999;
+	lower = 999;
+	getUpperLowerNum2IndexGivenTarget(3, EVEN_RIGHT, 4, 2, &lower, &upper);
+	assert(lower == -1);
+	assert(upper == 0);
 }
 
 int
