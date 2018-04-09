@@ -496,5 +496,11 @@ main () {
 
 	assert(findMedianSortedArrays(num4, SIZE_OF(num4), num4, SIZE_OF(num4)) == 3.0);
 
+	assert(findMedianSortedArrays(0, 0, num4, SIZE_OF(num4)) == 3.0);
+	assert(findMedianSortedArrays(num4, SIZE_OF(num4), 0, 0) == 3.0);
+
+	assert(findMedianSortedArrays(0, 0, num3, SIZE_OF(num3)) == 2.5);
+	assert(findMedianSortedArrays(num3, SIZE_OF(num3), 0, 0) == 2.5);
+
 	printf("array test pass\n");
 }
