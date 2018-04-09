@@ -123,11 +123,16 @@ enum TargetVal {
 };
 
 enum TargetVal
-isTargetAMedian(int nums1TargetIndex, int* nums1, int nums1Size,  int* nums2, int nums2Size) {
+isTargetAMedian(int nums1TargetIndex,
+		enum MedianPosition pos,
+		int* nums1,
+		int nums1Size, 
+		int* nums2,
+		int nums2Size) {
 	int lower = 0;
 	int upper = 0;
 	getUpperLowerNum2IndexGivenTarget(nums1TargetIndex,
-			ODD,
+			pos,
 			nums1Size,
 			nums2Size,
 			&lower,
@@ -171,7 +176,7 @@ binarySearchMedian(enum MedianPosition pos,
 	int mid = -1;
 	while(start <= end) {
 		mid = (start + end)/2;
-		enum TargetVal result = isTargetAMedian(mid, nums1, nums1Size, nums2, nums2Size);
+		enum TargetVal result = isTargetAMedian(mid, pos, nums1, nums1Size, nums2, nums2Size);
 		if(result == TOO_HIGH) {
 			end = mid - 1;
 		} else if(result == TOO_LOW) {
@@ -211,9 +216,36 @@ findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 			assert(0);
 		}
 	} else {
+		int sum = 0;
 
+		int leftIndex  = binarySearchMedian(EVEN_LEFT, nums1, nums1Size, nums2, nums2Size);
+		if(leftIndex != -1) {
+			sum = sum + nums1[leftIndex];
+		} else {
+			leftIndex  = binarySearchMedian(EVEN_LEFT, nums2, nums2Size, nums1, nums1Size);
+			if(leftIndex != -1) {
+				sum = sum + nums2[leftIndex];
+			} else {
+				assert(0);
+			}
+		}
+
+		int rightIndex = binarySearchMedian(EVEN_RIGHT, nums1, nums1Size, nums2, nums2Size);
+		if(rightIndex != -1) {
+			sum = sum + nums1[rightIndex];
+		} else {
+			rightIndex = binarySearchMedian(EVEN_RIGHT, nums2, nums2Size, nums1, nums1Size);
+			if(rightIndex != -1) {
+				sum = sum + nums2[rightIndex];
+			} else {
+				assert(0);
+			}
+		}
+
+		return sum / 2.0;
 	}
 
+	assert(0);
 	return 0;
 }
 
@@ -455,6 +487,14 @@ main () {
 
 	assert(findMedianSortedArrays(num1, SIZE_OF(num1), num3, SIZE_OF(num3)) == 4.0);
 	assert(findMedianSortedArrays(num3, SIZE_OF(num3), num1, SIZE_OF(num1)) == 4.0);
+
+	assert(findMedianSortedArrays(num2, SIZE_OF(num2), num3, SIZE_OF(num3)) == 4.5);
+	assert(findMedianSortedArrays(num3, SIZE_OF(num3), num2, SIZE_OF(num2)) == 4.5);
+
+	assert(findMedianSortedArrays(num1, SIZE_OF(num1), num4, SIZE_OF(num4)) == 3.5);
+	assert(findMedianSortedArrays(num4, SIZE_OF(num4), num1, SIZE_OF(num1)) == 3.5);
+
+	assert(findMedianSortedArrays(num4, SIZE_OF(num4), num4, SIZE_OF(num4)) == 3.0);
 
 	printf("array test pass\n");
 }
