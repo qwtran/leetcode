@@ -202,6 +202,13 @@ findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 	int isOdd = (nums1Size + nums2Size) % 2;
 
 	if(isOdd) {
+		if(nums1Size == 0) {
+			return nums2[nums2Size / 2];
+		}
+		if(nums2Size == 0) {
+			return nums1[nums1Size / 2];
+		}
+
 		int medianIndex = binarySearchMedian(ODD, nums1, nums1Size, nums2, nums2Size);
 
 		if(medianIndex != -1) {
@@ -217,6 +224,13 @@ findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
 		}
 	} else {
 		int sum = 0;
+
+		if(nums1Size == 0) {
+			return (nums2[nums2Size / 2] + nums2[(nums2Size / 2) - 1]) / 2.0;
+		}
+		if(nums2Size == 0) {
+			return (nums1[nums1Size / 2] + nums1[(nums1Size / 2) - 1]) / 2.0;
+		}
 
 		int leftIndex  = binarySearchMedian(EVEN_LEFT, nums1, nums1Size, nums2, nums2Size);
 		if(leftIndex != -1) {
@@ -502,8 +516,12 @@ main () {
 	assert(findMedianSortedArrays(0, 0, num1, SIZE_OF(num1)) == 4.0);
 	assert(findMedianSortedArrays(num1, SIZE_OF(num1), 0, 0) == 4.0);
 
-	assert(findMedianSortedArrays(0, 0, num3, SIZE_OF(num3)) == 2.5);
-	assert(findMedianSortedArrays(num3, SIZE_OF(num3), 0, 0) == 2.5);
+	assert(findMedianSortedArrays(0, 0, num3, SIZE_OF(num3)) == 3.0);
+	assert(findMedianSortedArrays(num3, SIZE_OF(num3), 0, 0) == 3.0);
+
+	int num5[] = {5, 9};
+	assert(findMedianSortedArrays(0, 0, num5, SIZE_OF(num5)) == 7.0);
+	assert(findMedianSortedArrays(num5, SIZE_OF(num5), 0, 0) == 7.0); 
 
 	printf("array test pass\n");
 }
